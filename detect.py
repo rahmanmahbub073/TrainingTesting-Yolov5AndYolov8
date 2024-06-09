@@ -68,9 +68,9 @@ from utils.torch_utils import select_device, smart_inference_mode
 
 @smart_inference_mode()
 def run(
-    weights=ROOT / "yolov5s.pt",  # model path or triton URL
-    source=ROOT / "data/images",  # file/dir/URL/glob/screen/0(webcam)
-    data=ROOT / "data/coco128.yaml",  # dataset.yaml path
+    weights=ROOT / "bestex2.pt",  # model path or triton URL
+    source=ROOT / "data/testimages",  # file/dir/URL/glob/screen/0(webcam)
+    data=ROOT / "data/custom-dataset.yaml",  # dataset.yaml path
     imgsz=(640, 640),  # inference size (height, width)
     conf_thres=0.25,  # confidence threshold
     iou_thres=0.45,  # NMS IOU threshold
@@ -221,7 +221,11 @@ def run(
                         annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / "crops" / names[c] / f"{p.stem}.jpg", BGR=True)
-
+            #ADD:when no labels
+            else: 
+                if save_txt:  # Write to file
+                    with open(f"{txt_path}.txt", "w") as f:
+                        pass
             # Stream results
             im0 = annotator.result()
             if view_img:
@@ -267,9 +271,9 @@ def run(
 def parse_opt():
     """Parses command-line arguments for YOLOv5 detection, setting inference options and model configurations."""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--weights", nargs="+", type=str, default=ROOT / "yolov5s.pt", help="model path or triton URL")
-    parser.add_argument("--source", type=str, default=ROOT / "data/images", help="file/dir/URL/glob/screen/0(webcam)")
-    parser.add_argument("--data", type=str, default=ROOT / "data/coco128.yaml", help="(optional) dataset.yaml path")
+    parser.add_argument("--weights", nargs="+", type=str, default=ROOT / "bestex2.pt", help="model path or triton URL")
+    parser.add_argument("--source", type=str, default=ROOT / "data/testimages", help="file/dir/URL/glob/screen/0(webcam)")
+    parser.add_argument("--data", type=str, default=ROOT / "data/custom-dataset.yaml", help="(optional) dataset.yaml path")
     parser.add_argument("--imgsz", "--img", "--img-size", nargs="+", type=int, default=[640], help="inference size h,w")
     parser.add_argument("--conf-thres", type=float, default=0.25, help="confidence threshold")
     parser.add_argument("--iou-thres", type=float, default=0.45, help="NMS IoU threshold")
